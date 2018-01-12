@@ -10,7 +10,9 @@ import UIKit
 
 class TodoListTableViewController: UITableViewController {
 
-    let itemArray = ["buy eggs", "sell eggs", "cook eggs"]
+    var itemArray = [String]()
+    
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +22,39 @@ class TodoListTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        if let item = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = item
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    @IBAction func addItemButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Add Item", message: nil, preferredStyle: .alert)
+        
+        alert.addTextField { (itemTextField) in
+            itemTextField.placeholder = "type something"
+            textField = itemTextField
+        }
+        
+        let alertAction = UIAlertAction(title: "Click to add", style: .default) { (alertAction) in
+            
+            self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            
+            self.tableView.reloadData()
+        }
+        alert.addAction(alertAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - Table view data source
 
 //    override func numberOfSections(in tableView: UITableView) -> Int {
