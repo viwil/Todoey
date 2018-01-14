@@ -7,25 +7,17 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListTableViewController: UITableViewController {
 
     var itemArray = [Item]()
-    
-    let defaults = UserDefaults.standard
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
-        if  let item = defaults.array(forKey: "ToDoListArray") as? [Item] {
-            itemArray = item
-        }
+        loadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,14 +37,12 @@ class TodoListTableViewController: UITableViewController {
         
         let alertAction = UIAlertAction(title: "Click to add", style: .default) { (alertAction) in
             
-            let newItem = Item()
+            let newItem = Item(context: self.context)
             newItem.title = textField.text!
+            newItem.done = false
             
             self.itemArray.append(newItem)
-            
-            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
-            
-            self.tableView.reloadData()
+            self.saveData()
         }
         alert.addAction(alertAction)
         present(alert, animated: true, completion: nil)
@@ -79,6 +69,7 @@ class TodoListTableViewController: UITableViewController {
         cell.textLabel?.text = itemArray[indexPath.row].title
         
         cell.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
+        
 
         return cell
     }
@@ -87,30 +78,32 @@ class TodoListTableViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        tableView.reloadData()
-
+        saveData()
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
     /*
-    // Override to support conditional editing of the table view.
+     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     */
 
-    /*
+
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
+            context.delete(itemArray[indexPath.row])
+            itemArray.remove(at: indexPath.row)
+            saveData()
+            
+            //tableView.deleteRows(at: [indexPath], with: .fade)
+        } //else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        //}
     }
-    */
 
     /*
     // Override to support rearranging the table view.
@@ -137,4 +130,58 @@ class TodoListTableViewController: UITableViewController {
     }
     */
 
+    func saveData() {
+        
+        do {
+            try context.save()
+        } catch {
+            print ("error when saving data \(error)")
+        }
+        self.tableView.reloadData()
+    }
+    
+    func loadData(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("error when loading data \(error)")
+        }
+        self.tableView.reloadData()
+    }
+}
+
+//MARK: - Search Bar Section
+
+extension TodoListTableViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        request.predicate = NSPredicate(format: "title CONTAINS [cd] %@", searchBar.text!)
+
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+        loadData(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0 {
+            
+            loadData()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        } else {
+            
+            let request : NSFetchRequest<Item> = Item.fetchRequest()
+            request.predicate = NSPredicate(format: "title CONTAINS [cd] %@", searchBar.text!)
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            
+            loadData(with: request)
+        }
+    }
 }
