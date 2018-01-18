@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		11757B45200B148300141DF0 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 11757B43200B148300141DF0 /* DataModel.xcdatamodeld */; };
+		11757B68200E587400141DF0 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11757B67200E587400141DF0 /* CategoryTableViewController.swift */; };
 		1185801020033993002122B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1185800F20033993002122B1 /* AppDelegate.swift */; };
 		1185801520033993002122B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1185801320033993002122B1 /* Main.storyboard */; };
 		1185801720033993002122B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1185801620033993002122B1 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		11757B44200B148300141DF0 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		11757B67200E587400141DF0 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		1185800C20033993002122B1 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1185800F20033993002122B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1185801420033993002122B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 		1117A3372009A95300BB57C7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				11757B67200E587400141DF0 /* CategoryTableViewController.swift */,
 				1185802320033FF2002122B1 /* TodoListTableViewController.swift */,
 				1185800F20033993002122B1 /* AppDelegate.swift */,
 			);
@@ -174,6 +177,7 @@
 				1185801020033993002122B1 /* AppDelegate.swift in Sources */,
 				11757B45200B148300141DF0 /* DataModel.xcdatamodeld in Sources */,
 				1185802420033FF2002122B1 /* TodoListTableViewController.swift in Sources */,
+				11757B68200E587400141DF0 /* CategoryTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
